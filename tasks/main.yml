@@ -1,6 +1,8 @@
 ---
 
 - name: Configure apt repository
+  become: true
+  become_method: ansible.builtin.sudo
   when:
     - ansible_pkg_mgr in [ "apt" ]
   block:
@@ -12,17 +14,21 @@
       loop_control:
         label: "{{ item | basename }}"
 
-    - name: Place apt repository
+    - name: Set apt repository
       ansible.builtin.apt_repository:
         repo: deb [ arch=amd64 ] {{ virtualbox_apt_repository }} {{ ansible_distribution_release | lower }} contrib
         state: present
 
 - name: Install requirements
+  become: true
+  become_method: ansible.builtin.sudo
   ansible.builtin.package:
     name: "{{ virtualbox_requirements }}"
     state: present
 
 - name: Install virtualbox
+  become: true
+  become_method: ansible.builtin.sudo
   ansible.builtin.package:
     name: "{{ virtualbox_package }}"
     state: present
