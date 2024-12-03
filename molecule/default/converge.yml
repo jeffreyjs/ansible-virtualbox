@@ -1,0 +1,15 @@
+---
+- name: Converge
+  hosts: all
+
+  pre_tasks:
+    - name: Update apt cache on Debian systems.
+      ansible.builtin.apt:
+        update_cache: true
+        name: gpg-agent
+      when: ansible_os_family == "Debian"
+
+  tasks:
+    - name: Include virtaulbox
+      ansible.builtin.include_role:
+        name: jeffreyjs.virtualbox
